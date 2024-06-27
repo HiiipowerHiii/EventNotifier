@@ -1,1 +1,1 @@
-# EventNotifier
+EventNotifier is a Flask-based server project designed to notify users about various events through Telegram. Utilizing Flask and SQLAlchemy, it connects to a PostgreSQL database for event management. The application parses JSON data through middleware and interacts with the Telegram Bot API to send notifications directly to users. Set to run on port 5000, EventNotifier efficiently bridges event information to users, ensuring they stay updated in real-time.
