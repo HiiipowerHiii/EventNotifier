@@ -1,27 +1,26 @@
 from flask import Blueprint, request, jsonify
-from your_event_controller_module import create_event, get_all_events, get_event_by_id, update_event, delete_event
-import os
+from your_event_controller_module import create_event, fetch_all_events, fetch_event_by_id, modify_event, remove_event
 
-events_bp = Blueprint('events_bp', __name__)
+event_notification_blueprint = Blueprint('event_notification_blueprint', __name__)
 
-@events_bp.route('/events', methods=['POST'])
-def add_event():
-    data = request.get_json()
-    return create_event(data)
+@event_notification_blueprint.route('/events', methods=['POST'])
+def add_new_event():
+    event_details = request.get_json()
+    return create_event(event_details)
 
-@events_bp.route('/events', methods=['GET'])
-def retrieve_events():
-    return jsonify(get_all_events())
+@event_notification_blueprint.route('/events', methods=['GET'])
+def retrieve_all_events():
+    return jsonify(fetch_all_events())
 
-@events_bp.route('/events/<string:event_id>', methods=['GET'])
-def retrieve_event(event_id):
-    return jsonify(get_event_by_id(event_id))
+@event_notification_blueprint.route('/events/<string:event_id>', methods=['GET'])
+def retrieve_specific_event(event_id):
+    return jsonify(fetch_event_by_id(event_id))
 
-@events_bp.route('/events/<string:event_id>', methods=['PUT'])
-def update_an_event(event_id):
-    data = request.get_json()
-    return update_event(event_id, data)
+@event_notification_blueprint.route('/events/<string:event_id>', methods=['PUT'])
+def update_specific_event(event_id):
+    updated_event_details = request.get_json()
+    return modify_event(event_id, updated_event_details)
 
-@events_bp.route('/events/<string:event_id>', methods=['DELETE'])
-def delete_an_event(event_id):
-    return delete_event(event_id)
+@event_notification_blueprint.route('/events/<string:event_id>', methods=['DELETE'])
+def delete_specificActivity(event_id):
+    return remove_event(event_id)
