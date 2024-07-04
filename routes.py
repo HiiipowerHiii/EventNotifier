@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from your_event_controller_module import create_event, fetch_all_events, fetch_event_by_id, modify_event, remove_event
+from your_event_controller_allocator import create_event, fetch_all_events, fetch_event_by_id, modify_event, remove_event
 
 event_notification_blueprint = Blueprint('event_notification_blueprint', __name__)
 
@@ -22,5 +22,5 @@ def update_specific_event(event_id):
     return modify_event(event_id, updated_event_details)
 
 @event_notification_blueprint.route('/events/<string:event_id>', methods=['DELETE'])
-def delete_specificActivity(event_id):
+def delete_specific_activity(event_id):
     return remove_event(event_id)
