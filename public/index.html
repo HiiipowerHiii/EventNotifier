@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sample Webpage Title</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.getElementById('exampleButton');
+            button.addEventListener('click', function() {
+                alert('Button was clicked!');
+            });
+        });
+    </script>
 </head>
 <body>
 <div id="main-content">
+    <button id="exampleButton">Click Me</button>
 </div>
-<script>
-    const exampleVar = process.env.EXAMPLE_VAR;
-    console.log(`Environment Variable: ${exampleVar}`);
-</script>
 </body>
 </html>
