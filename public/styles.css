@@ -1,15 +1,21 @@
+/* Base styling for main text elements */
 body {
   font-family: 'Arial', sans-serif;
 }
+
 h1, h2, h3, p {
   margin: 0;
   padding: 0;
 }
+
+/* Header styles */
 .header {
   background-color: #f0f0f0;
   padding: 20px;
   text-align: center;
 }
+
+/* Event form styling */
 .event-form {
   margin: 20px auto;
   padding: 20px;
@@ -17,6 +23,8 @@ h1, h2, h3, p {
   background-color: #f9f9f9;
   border-radius: 8px;
 }
+
+/* Input and button styling within event forms */
 .event-form input[type="text"],
 .event-form input[type="date"],
 .event-form input[type="time"],
@@ -26,21 +34,28 @@ h1, h2, h3, p {
   margin-top: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Ensures padding & border are included in total width/height */
 }
+
+/* Submit button styling */
 .event-form button {
   background-color: #5cb85c;
   color: white;
   border: none;
   cursor: pointer;
 }
+
 .event-form button:hover {
-  background-color: #4cae4c;
+  background-color: #4cae4c; /* Slightly darker shade on hover */
 }
+
+/* Event list container styling */
 .event-list {
   margin: 20px auto;
   max-width: 600px;
 }
+
+/* Individual event item styling */
 .event-item {
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -48,11 +63,13 @@ h1, h2, h3, p {
   padding: 10px;
   margin: 10px 0;
 }
+
+/* Responsive design adjustments */
 @media (max-width: 768px) {
   .event-form, .event-list {
-    margin: 10px;
+    margin: 10px; /* Reduced margin for smaller screens */
   }
   .header {
-    padding: 10px;
+    padding: 10px; /* Adjusted padding for the header */
   }
 }
