@@ -1,37 +1,37 @@
 const API_BASE_URL = process.env.API_BASE_URL || 'http://yourapiurl.com/api';
 const API_KEY = process.env.API_KEY || 'yourapikey';
 
-document.addEventListener('DOMContentLoaded', fetchAndDisplayData);
-document.getElementById('createForm').addEventListener('submit', createEvent);
+document.addEventListener('DOMContentLoaded', fetchAndDisplayEvents);
+document.getElementById('createForm').addEventListener('submit', handleCreateEventFormSubmit);
 
-document.addEventListener('click', function(e) {
-    if (e.target && e.target.className === 'update-btn') {
-        const eventId = e.target.dataset.eventId;
-        updateEvent(eventId);
-    } else if (e.target && e.target.className === 'delete-btn') {
-        const eventId = e.target.dataset.eventId;
-        deleteEvent(eventId);
+document.addEventListener('click', handleDocumentClick);
+
+function handleDocumentClick(event) {
+    if (event.target && event.target.className === 'update-btn') {
+        const eventId = event.target.dataset.eventId;
+        promptAndUpdateEvent(eventId);
+    } else if (event.target && event.target.className === 'delete-btn') {
+        const eventId = event.target.dataset.eventId;
+        confirmAndDeleteEvent(eventId);
     }
-});
+}
 
-function fetchAndDisplayData() {
+function fetchAndDisplayEvents() {
     fetchEvents()
-    .then(displayEvents)
-    .catch(handleError);
+        .then(displayEvents)
+        .catch(handleError);
 }
 
 function fetchEvents() {
     return fetch(`${API_BASE_URL}/events`, {
         headers: { 'Authorization': `Bearer ${API_KEY}` },
-    }).then(response => response.json());
+    })
+    .then(response => response.json());
 }
 
-function displayEvents(data) {
+function displayEvents(events) {
     const eventsContainer = document.getElementById('eventsContainer');
-    eventsContainer.innerHTML = '';
-    data.forEach(event => {
-        eventsContainer.innerHTML += createEventHTML(event);
-    });
+    eventsContainer.innerHTML = events.map(createEventHTML).join('');
 }
 
 function createEventHTML(event) {
@@ -45,13 +45,17 @@ function createEventHTML(event) {
     `;
 }
 
-function createEvent(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+function handleCreateEventFormSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
     const jsonData = Object.fromEntries(formData.entries());
-    postEvent(jsonData)
-    .then(fetchAndDisplayData)
-    .catch(handleError);
+    createAndDisplayNewEvent(jsonData);
+}
+
+function createAndDisplayNewEvent(eventData) {
+    postEvent(eventData)
+        .then(fetchAndDisplayEvents)
+        .catch(handleError);
 }
 
 function postEvent(eventData) {
@@ -62,17 +66,21 @@ function postEvent(eventData) {
             'Authorization': `Bearer ${API_KEY}`,
         },
         body: JSON.stringify(eventData),
-    }).then(response => response.json());
+    })
+    .then(response => response.json());
 }
 
-function updateEvent(eventId) {
+function promptAndUpdateEvent(eventId) {
     const title = prompt("Enter new title for event:");
     if (title) {
-        const eventData = { title };
-        putEvent(eventId, eventData)
-        .then(fetchAndDisplayData)
-        .catch(handleError);
+        updateEvent(eventId, { title });
     }
+}
+
+function updateEvent(eventId, eventData) {
+    putEvent(eventId, eventData)
+        .then(fetchAndDisplayEvents)
+        .catch(handleError);
 }
 
 function putEvent(eventId, eventData) {
@@ -83,24 +91,30 @@ function putEvent(eventId, eventData) {
             'Authorization': `Bearer ${API_KEY}`,
         },
         body: JSON.stringify(eventData),
-    }).then(response => response.json());
+    })
+    .then(response => response.json());
 }
 
-function deleteEvent(eventId) {
+function confirmAndDeleteEvent(eventId) {
     if (confirm("Are you sure you want to delete this event?")) {
-        deleteEventRequest(eventId)
-        .then(fetchAndDisplayData)
-        .catch(handleError);
+        deleteEventAndRefresh(eventId);
     }
 }
 
-function deleteEventRequest(eventId) {
+function deleteEventAndRefresh(eventId) {
+    deleteEvent(eventId)
+        .then(fetchAndDisplayEvents)
+        .catch(handleError);
+}
+
+function deleteEvent(eventId) {
     return fetch(`${API_BASE_URL}/events/${eventId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${API_KEY}` },
-    }).then(response => response.json());
+    })
+    .then(response => response.json());
 }
 
-function handleError(err) {
-    console.error(err);
+function handleError(error) {
+    console.error(error);
 }
