@@ -1,22 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const EventNotifierForm = ({ onEventSubmit, initialEventData = {} }) => {
-  const [eventTitle, setEventTitle] = useState('');
-  const [eventDescription, setEventDescription] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [eventTime, setEventTime] = useState('');
+  const [formData, setFormData] = useState({
+    eventTitle: '',
+    eventDescription: '',
+    eventDate: '',
+    eventTime: ''
+  });
 
   useEffect(() => {
-    if (initialEventData) {
-      setEventTitle(initialEventData.title || '');
-      setEventDescription(initialEventData.description || '');
-      setEventDate(initialEventData.date || '');
-      setEventTime(initialEventData.time || '');
-    }
+    setFormData({
+      eventTitle: initialEventData.title || '',
+      eventDescription: initialEventData.description || '',
+      eventDate: initialEventData.date || '',
+      eventTime: initialEventData.time || '',
+    });
   }, [initialEventData]);
 
-  const handleFormSubmit = (event) => {
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }, []);
+
+  const handleFormSubmit = useCallback((event) => {
     event.preventDefault();
+
+    const { eventTitle, eventDescription, eventDate, eventTime } = formData;
 
     if (!eventTitle || !eventDescription || !eventDate || !eventTime) {
       alert('All fields are required!');
@@ -24,7 +36,7 @@ const EventNotifierForm = ({ onEventSubmit, initialEventData = {} }) => {
     }
 
     onEventSubmit({ title: eventTitle, description: eventDescription, date: eventDate, time: eventTime });
-  };
+  }, [formData, onEventSubmit]);
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -32,31 +44,35 @@ const EventNotifierForm = ({ onEventSubmit, initialEventData = {} }) => {
         <label>Title</label>
         <input
           type="text"
-          value={eventTitle}
-          onChange={(e) => setEventTitle(e.target.value)}
+          name="eventTitle"
+          value={formData.eventTitle}
+          onChange={handleChange}
         />
       </div>
       <div>
         <label>Description</label>
         <textarea
-          value={eventDescription}
-          onChange={(e) => setEventDescription(e.target.value)}
+          name="eventDescription"
+          value={formData.eventDescription}
+          onChange={handleChange}
         ></textarea>
       </div>
       <div>
         <label>Date</label>
         <input
           type="date"
-          value={eventDate}
-          onChange={(e) => setEventDate(e.target.value)}
+          name="eventDate"
+          value={formData.eventDate}
+          onChange={handleChange}
         />
       </div>
       <div>
         <label>Time</label>
         <input
           type="time"
-          value={eventTime}
-          onChange={(e) => setEventTime(e.target.value)}
+          name="eventTime"
+          value={formData.eventTime}
+          onChange={handleChange}
         />
       </div>
       <button type="submit">Submit</button>
